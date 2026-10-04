@@ -6,8 +6,8 @@ Follow the steps below to run the project on your local computer:
 
 ### 1. Clone the project
 ```bash
-git clone https://github.com
-cd calorie-counter
+git clone https://github.com/Robiul-Coder007/Personal-Portfolio.git
+cd Personal-Portfolio
 ````
 
 ### 2. Create and activate the virtual environment
