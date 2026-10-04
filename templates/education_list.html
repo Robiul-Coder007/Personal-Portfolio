@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card p-4 shadow-sm">
+    <div class="d-flex justify-content-between">
+        <h2>Education</h2>
+
+        <a href="{% url 'education_create' %}" class="btn btn-primary mt-3">+ Add Education</a>
+    </div>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success mt-3">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <hr>
+    {% if educations %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Degree</th>
+                <th>Institution</th>
+                <th>Year</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for education in educations %}
+            <tr>
+                <td>{{ education.degree }}</td>
+                <td>{{ education.institution }}</td>
+                <td>{{ education.start_year }} - {{ education.end_year|default:"Present" }}</td>
+                <td>
+                    <a href="{% url 'education_update' education.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'education_delete' education.id %}" class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this education record?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No education records found.</p>
+    {% endif %}
+</div>
+{% endblock %}

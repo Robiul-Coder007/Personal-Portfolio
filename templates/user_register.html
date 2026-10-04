@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card p-4 shadow-sm">
+    <h2>Create a new account</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <p>
+            <button type="submit" class="btn btn-primary mt-3">Register</button>
+            <a class="btn btn-primary mt-3" href="{% url 'user_login' %}">Already have an Account?</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

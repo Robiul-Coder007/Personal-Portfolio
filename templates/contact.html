@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card p-4 shadow-sm">
+    <h2>Contact Me</h2>
+
+    <p>Send me a message using the form below.</p>
+    <hr>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success mt-3">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Send Message</button>
+    </form>
+</div>
+{% endblock %}
