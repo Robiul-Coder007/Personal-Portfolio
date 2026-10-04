@@ -70,7 +70,6 @@ A Django-based personal portfolio website with:
 PortfolioApp/
 Robiul_04_Portfolio/
 templates/
-static/
 media/
 manage.py
 requirements.txt
