@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="col-md-4 text-center mt-4 mt-md-0">
-            {% if request.user.pro_pic %}
-            <img src="{{ request.user.pro_pic.url }}" alt="Profile Picture" class="rounded-circle shadow"
+            {% if profile and profile.user.pro_pic %}
+            <img src="{{ profile.user.pro_pic.url }}" alt="Profile Picture" class="rounded-circle shadow"
                 style="width: 260px; height: 260px; object-fit: cover;">
             {% else %}
             <div class="profile-placeholder bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto shadow"
