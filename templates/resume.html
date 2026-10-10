@@ -1,146 +1,178 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<div style="font-family: Arial, sans-serif; color: #333; max-width: 750px; margin: 0 auto; padding: 20px;">
-    <div class="resume-actions" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">&larr; Back to Portfolio</a>
-        <button type="button" onclick="window.print()" class="btn btn-primary mt-3">Print / Save as PDF</button>
-    </div>
-
-    <article class="resume-sheet"
-        style="background: #fff; border: 1px solid #ddd; padding: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <header
-            style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 15px;">
-            <div>
-                <h1 style="font-size: 2rem; margin: 0; color: #111;">
-                    {% if profile %}
-                    {{ profile.user.full_name|default:profile.user.username }}
-                    {% else %}
-                    Your Name
-                    {% endif %}
-                </h1>
-                <h4
-                    style="font-size: 1.05rem; color: #555; margin: 5px 0 10px 0; font-weight: normal; text-transform: uppercase;">
-                    {% if profile %}{{ profile.designation|default:"Professional" }}{% else %}Professional{% endif %}
-                </h4>
-                <div style="font-size: 0.85rem; color: #666; line-height: 1.4;">
-                    {% if profile %}
-                    {% if profile.user.email %}{{ profile.user.email }} &bull; {% endif %}
-                    {% if profile.phone %}{{ profile.phone }} &bull; {% endif %}
-                    {% if profile.address %}{{ profile.address }}{% endif %}
-                    {% endif %}
-                </div>
-                <div style="font-size: 0.85rem; margin-top: 5px;">
-                    Bangladesh!
-                </div>
-            </div>
-            {% if profile and profile.user.pro_pic %}
-            <img src="{{ profile.user.pro_pic.url }}" alt="Profile photo"
-                style="width: 90px; height: 90px; object-fit: cover; border: 1px solid #ccc; padding: 2px;">
-            {% endif %}
-        </header>
-
-        <section>
-            <h2>Professional Summary</h2>
-            <p class="resume-desc">
-                {% if profile and profile.biography %}
-                {{ profile.biography|linebreaksbr }}
-                {% else %}
-                Add your professional summary through the dashboard.
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 resume-actions">
+    <a href="{% url 'contact' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Back to Contact
+    </a>
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="fas fa-print me-1"></i> Print / Save PDF
+    </button>
+</div>
+<div class="card shadow-sm border-0 resume-sheet">
+    <div class="card-body p-4 p-md-5">
+        <div class="text-center mb-4">
+            <div class="text-end">
+                {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" class="rounded img-thumbnail"
+                    width="120" height="120" style="object-fit: cover;">
                 {% endif %}
-            </p>
+            </div>
+            <h2 class="fw-bold">CURRICULUM VITAE <br> Of <br> {{ profile.name }}</h2>
+            {% if profile.email %}
+            <p class="mb-1">{{ profile.email }}</p>
+            {% endif %}
+            {% if profile.phone %}
+            <p class="mb-1">{{ profile.phone }}</p>
+            {% endif %}
+            {% if profile.mailing_address %}
+            <p class="mb-1">{{ profile.mailing_address }}</p>
+            {% endif %}
+        </div>
+        {% if profile.career_objective %}
+        <section>
+            <h2>Career Objective</h2>
+            <p>{{ profile.career_objective|linebreaksbr }}</p>
         </section>
+        {% endif %}
+        {% if profile.father_name or profile.mother_name or profile.date_of_birth or profile.nationality or profile.gender or profile.permanent_address %}
+        <section>
+            <h2>Personal Information</h2>
 
+            {% if profile.father_name %}
+            <p><strong>Father's Name:</strong> {{ profile.father_name }}</p>
+            {% endif %}
+            {% if profile.mother_name %}
+            <p><strong>Mother's Name:</strong> {{ profile.mother_name }}</p>
+            {% endif %}
+            {% if profile.date_of_birth %}
+            <p><strong>Date of Birth:</strong> {{ profile.date_of_birth|date:"d M Y" }}</p>
+            {% endif %}
+            {% if profile.nationality %}
+            <p><strong>Nationality:</strong> {{ profile.nationality }}</p>
+            {% endif %}
+            {% if profile.gender %}
+            <p><strong>Gender:</strong> {{ profile.gender }}</p>
+            {% endif %}
+            {% if profile.permanent_address %}
+            <p><strong>Permanent Address:</strong> {{ profile.permanent_address }}</p>
+            {% endif %}
+        </section>
+        {% endif %}
         <section>
             <h2>Technical Skills</h2>
-            {% if skills %}
-            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                {% for skill in skills %}
-                <span
-                    style="background: #f4f4f4; color: #333; padding: 3px 8px; border-radius: 3px; font-size: 0.8rem; border: 1px solid #e0e0e0;">
-                    {{ skill.name }}
-                </span>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p style="font-size: 0.9rem; color: #777; font-style: italic;">No skills added yet.</p>
-            {% endif %}
-        </section>
 
-        <section>
-            <h2>Education</h2>
-            {% for education in educations %}
+            {% for skill in skills %}
             <div class="resume-item">
-                <div class="resume-item-header">
-                    <h3>{{ education.degree }}</h3>
-                    <span>{{ education.start_year }} - {{ education.end_year|default:"Present" }}</span>
+                <strong>{{ skill.name }}</strong>
+                {% if skill.category %}
+                <span class="text-muted"> — {{ skill.category }}</span>
+                {% endif %}
+                <div class="progress" style="height: 25px;" role="progressbar" aria-valuenow="{{ skill.proficiency }}"
+                    aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-primary"
+                        style="--progress-width: {{ skill.proficiency }}%; width: var(--progress-width);">
+                        {{ skill.proficiency }}%
+                    </div>
                 </div>
-                <p class="resume-sub">{{ education.institution }}</p>
-                {% if education.subject %}
-                <p style="font-size: 0.85rem; color: #555; margin: 0;">Subject: {{ education.subject }}</p>
+                {% if skill.description %}
+                <p class="mt-1 mb-0">{{ skill.description|linebreaksbr }}</p>
                 {% endif %}
             </div>
             {% empty %}
-            <p style="font-size: 0.9rem; color: #777; font-style: italic;">No education information added yet.</p>
+            <p class="text-muted">No skills added yet.</p>
             {% endfor %}
         </section>
+        <section>
+            <h2>Educational Background</h2>
 
+            {% for education in educations %}
+            <div class="resume-item">
+                <div class="resume-item-header">
+                    <h3>{{ education.qualification }}</h3>
+                    {% if education.passing_year %}
+                    <span>{{ education.passing_year }}</span>
+                    {% endif %}
+                </div>
+                <p class="resume-sub">{{ education.institute }}</p>
+                {% if education.group_or_subject %}
+                <p class="mb-1"><strong>Subject/Group:</strong> {{ education.group_or_subject }}</p>
+                {% endif %}
+                {% if education.result_or_cgpa != None %}
+                <p class="mb-1"><strong>Result/CGPA:</strong> {{ education.result_or_cgpa }}</p>
+                {% endif %}
+                {% if education.board %}
+                <p class="mb-1"><strong>Board:</strong> {{ education.board }}</p>
+                {% endif %}
+                {% if education.description %}
+                <p>{{ education.description|linebreaksbr }}</p>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-muted">No education records added yet.</p>
+            {% endfor %}
+        </section>
         <section>
             <h2>Work Experience</h2>
+
             {% for experience in experiences %}
             <div class="resume-item">
                 <div class="resume-item-header">
                     <h3>{{ experience.job_title }}</h3>
                     <span>
-                        {{ experience.start_date|date:"M Y" }} -
-                        {% if experience.currently_working %}
+                        {{ experience.start_date|date:"d M Y" }}
+                        – {% if experience.currently_working %}
                         Present
                         {% elif experience.end_date %}
-                        {{ experience.end_date|date:"M Y" }}
+                        {{ experience.end_date|date:"d M Y" }}
                         {% else %}
                         Not specified
                         {% endif %}
                     </span>
                 </div>
-                <p class="resume-sub">{{ experience.company }}</p>
-                <p class="resume-desc">{{ experience.description|linebreaksbr }}</p>
+                <p class="resume-sub">{{ experience.company_name }}
+                    {% if experience.location %} — {{ experience.location }} {% endif %}
+                </p>
+                {% if experience.description %}
+                <p>{{ experience.description|linebreaksbr }}</p>
+                {% endif %}
             </div>
             {% empty %}
-            <p style="font-size: 0.9rem; color: #777; font-style: italic;">No work experience added yet.</p>
+            <p class="text-muted">No work experience added yet.</p>
             {% endfor %}
         </section>
-
         <section>
             <h2>Projects</h2>
+
             {% for project in projects %}
             <div class="resume-item">
-                <h3 style="font-size: 1rem; color: #222;">{{ project.title }}</h3>
-                <p class="resume-desc">{{ project.description|linebreaksbr }}</p>
+                <h3>{{ project.title }}</h3>
+                {% if project.is_featured %}
+                <span class="badge bg-primary">Featured</span>
+                {% endif %}
+                <p>{{ project.description|linebreaksbr }}</p>
                 {% if project.technologies %}
-                <p style="font-size: 0.85rem; color: #444; margin: 2px 0;"><strong>Technologies:</strong>
-                    {{ project.technologies }}
-                </p>
+                <p><strong>Technologies:</strong> {{ project.technologies }}</p>
                 {% endif %}
                 {% if project.github_url %}
-                <div style="font-size: 0.85rem; margin-top: 4px;">
-                    <a href="{{ project.github_url }}" target="_blank" style="color: #007bff; text-decoration: none;">
-                        GitHub Repository
+                <p><strong>GitHub:</strong>
+                    <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">
+                        View Project
                     </a>
-                </div>
+                </p>
                 {% endif %}
             </div>
             {% empty %}
-            <p style="font-size: 0.9rem; color: #777; font-style: italic;">No projects added yet.</p>
+            <p class="text-muted">No projects added yet.</p>
             {% endfor %}
         </section>
+        {% if profile.interests %}
+        <section>
+            <h2>Interests</h2>
 
-        <footer style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
-            <p style="font-size: 0.75rem; color: #999; margin: 0;">Resume generated from my personal portfolio.</p>
-        </footer>
-    </article>
-
-    <div class="resume-actions" style="text-align: center; margin-top: 10px;">
-        <button type="button" onclick="window.print()" class="btn btn-primary mt-3">Print / Save as PDF</button>
+            <p>{{ profile.interests|linebreaksbr }}</p>
+        </section>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

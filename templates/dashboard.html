@@ -1,248 +1,164 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="text-center mb-4">
-    Welcome, {{ request.user.username }}!
-</h1>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+        <h2>Dashboard</h2>
+        <p class="text-muted mb-0">
+            Manage your personal portfolio information.
+        </p>
+    </div>
+    <a href="{% url 'update_profile' %}" class="btn btn-primary">
+        <i class="fas fa-user-edit"></i>
+        Update Profile
+    </a>
+</div>
 {% if messages %}
 {% for message in messages %}
-<div class="alert alert-success shadow-sm">
+<div class="alert alert-success alert-dismissible fade show py-3 mb-3">
     {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 {% endfor %}
 {% endif %}
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Your Profile</h2>
-        <a href="{% url 'update_profile' %}" class="btn btn-primary mt-3">+ Add / Update Profile</a>
+{% if profile %}
+<div class="row g-3">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center py-5">
+                {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}"
+                    class="rounded-circle img-fluid mb-3" style="width: 200px; height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3"
+                    style="width: 180px; height: 180px;">
+                    <i class="fas fa-user fa-5x text-secondary"></i>
+                </div>
+                {% endif %}
+                <h4>{{ profile.name }}</h4>
+                <p class="text-muted">{{ request.user.username }}</p>
+                <a href="{% url 'update_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+            </div>
+        </div>
     </div>
-    <hr>
-    <p><strong>Name: </strong>{{ request.user.full_name|default:request.user.username }}</p>
-    <p><strong>Email: </strong>{{ request.user.email }}</p>
-    <p><strong>Designation: </strong>{{ profile.designation|default:"-" }}</p>
-    <p><strong>Phone: </strong>{{ profile.phone|default:"-" }}</p>
-    <p><strong>Address: </strong>{{ profile.address|default:"-" }}</p>
-    <p><strong>Biography: </strong>{{ profile.biography|default:"-" }}</p>
-    <p><strong>Date of Birth: </strong>{{ profile.date_of_birth|date:"F d, Y"|default:"-" }}</p>
-</div>
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Skills</h2>
-        <a href="{% url 'skill_create' %}" class="btn btn-primary mt-3">+ Add Skill</a>
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body py-3">
+                <h4 class="mb-4">Personal Information</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-1">
+                        <strong>Email:</strong>
+                        <br>
+                        {{ profile.email|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Phone:</strong>
+                        <br>
+                        {{ profile.phone|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Date of Birth:</strong>
+                        <br>
+                        {{ profile.date_of_birth|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Gender:</strong>
+                        <br>
+                        {{ profile.gender|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Nationality:</strong>
+                        <br>
+                        {{ profile.nationality|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Religion:</strong>
+                        <br>
+                        {{ profile.religion|default:"Not provided" }}
+                    </div>
+                    <div class="col-md-6 mb-1">
+                        <strong>Marital Status:</strong>
+                        <br>
+                        {{ profile.marital_status|default:"Not provided" }}
+                    </div>
+                </div>
+                <hr class="my-1">
+                <h5>Career Objective:</h5>
+                <p class="text-muted">{{ profile.career_objective|default:"Not provided" }}</p>
+                <h5>Interests:</h5>
+                <p class="text-muted">{{ profile.interests|default:"Not provided" }}</p>
+            </div>
+        </div>
     </div>
-    <hr>
-    {% if skills %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Skill</th>
-                <th>Level</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for skill in skills %}
-            <tr>
-                <td>{{ skill.name }}</td>
-                <td>{{ skill.percentage }}%</td>
-                <td>
-                    <a href="{% url 'skill_update' skill.id %}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{% url 'skill_delete' skill.id %}" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this skill?')">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No skills have been added yet.</p>
-    {% endif %}
 </div>
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Education</h2>
-        <a href="{% url 'education_create' %}" class="btn btn-primary mt-3">+ Add Education</a>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body py-2">
+                <h5>Mailing Address:</h5>
+                <p>{{ profile.mailing_address|default:"Not provided" }}</p>
+            </div>
+        </div>
     </div>
-    <hr>
-    {% if educations %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Degree</th>
-                <th>Institution</th>
-                <th>Subject</th>
-                <th>Year</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for education in educations %}
-            <tr>
-                <td>{{ education.degree }}</td>
-                <td>{{ education.institution }}</td>
-                <td>{{ education.subject }}</td>
-                <td>{{ education.start_year }} - {{ education.end_year|default:"Present" }}</td>
-                <td>{{ education.description|default:"-" }}</td>
-                <td>
-                    <a href="{% url 'education_update' education.id %}" class="btn btn-sm btn-warning mt-1">Edit</a>
-                    <a href="{% url 'education_delete' education.id %}" class="btn btn-sm btn-danger mt-1"
-                        onclick="return confirm('Are you sure you want to delete this education entry?')">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No education information has been added.</p>
-    {% endif %}
-</div>
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Experience</h2>
-        <a href="{% url 'experience_create' %}" class="btn btn-primary mt-3">+ Add Experience</a>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body py-2">
+                <h5>Permanent Address:</h5>
+                <p>{{ profile.permanent_address|default:"Not provided" }}</p>
+            </div>
+        </div>
     </div>
-    <hr>
-    {% if experiences %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Job Title</th>
-                <th>Company</th>
-                <th>Period</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for experience in experiences %}
-            <tr>
-                <td>{{ experience.job_title }}</td>
-                <td>{{ experience.company }}</td>
-                <td>{{ experience.start_date }} -
-                    {% if experience.currently_working %}
-                    Present
-                    {% else %}
-                    {{ experience.end_date }}
-                    {% endif %}
-                </td>
-                <td>{{ experience.description|default:"-" }}</td>
-                <td>
-                    <a href="{% url 'experience_update' experience.id %}" class="btn btn-sm btn-warning mt-1">Edit</a>
-                    <a href="{% url 'experience_delete' experience.id %}" class="btn btn-sm btn-danger mt-1"
-                        onclick="return confirm('Are you sure you want to delete this experience entry?')">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No work experience has been added.</p>
-    {% endif %}
 </div>
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Projects</h2>
-        <a href="{% url 'project_create' %}" class="btn btn-primary mt-3">+ Add Project</a>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 g-3">
+    <div class="col">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2 d-flex flex-column justify-content-between">
+                <h5 class="card-title">Skills</h5>
+                <h2>{{ skill_count }}</h2>
+                <a href="{% url 'skill_list' %}" class="btn btn-primary btn-sm">Manage Skills</a>
+            </div>
+        </div>
     </div>
-    <hr>
-    {% if projects %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Project</th>
-                <th>Technologies</th>
-                <th>Description</th>
-                <th>Github</th>
-                <th>Image</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for project in projects %}
-            <tr>
-                <td>{{ project.title }}</td>
-                <td>{{ project.technologies }}</td>
-                <td>{{ project.description|default:"-" }}</td>
-                <td>
-                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-sm btn-dark mt-2">View on
-                        Github</a>
-                </td>
-                <td>
-                    {% if project.image %}
-                    <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-thumbnail" width="80"
-                        height="60" style="object-fit: cover;">
-                    {% else %}
-                    <span>No Image</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'project_update' project.id %}" class="btn btn-sm btn-warning mt-1">Edit</a>
-                    <a href="{% url 'project_delete' project.id %}" class="btn btn-sm btn-danger mt-1"
-                        onclick="return confirm('Are you sure you want to delete this project?')">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No projects have been added yet.</p>
-    {% endif %}
-</div>
-<br>
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Contact Messages</h2>
-        <a href="{% url 'contact_messages' %}" class="btn btn-primary mt-3">View Messages</a>
+    <div class="col">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2 d-flex flex-column justify-content-between">
+                <h5 class="card-title">Education</h5>
+                <h2>{{ education_count }}</h2>
+                <a href="{% url 'education_list' %}" class="btn btn-success btn-sm">Manage Education</a>
+            </div>
+        </div>
     </div>
-    <hr>
-    <p>Manage messages received from portfolio visitors.</p>
-    {% if messages_list %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Subject</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for message in messages_list %}
-            <tr>
-                <td>{{ message.name }}</td>
-                <td>{{ message.email }}</td>
-                <td>{{ message.subject }}</td>
-                <td>
-                    {% if message.is_read %}
-                    <span class="badge bg-success">Read</span>
-                    {% else %}
-                    <span class="badge bg-warning text-dark">Unread</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'contact_message_detail' message.id %}" class="btn btn-sm btn-primary">View</a>
-                    <a href="{% url 'contact_message_delete' message.id %}" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this message?');">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No messages have been received.</p>
-    {% endif %}
+    <div class="col">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2 d-flex flex-column justify-content-between">
+                <h5 class="card-title">Experience</h5>
+                <h2>{{ experience_count }}</h2>
+                <a href="{% url 'experience_list' %}" class="btn btn-warning btn-sm text-white">Manage Experience</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2 d-flex flex-column justify-content-between">
+                <h5 class="card-title">Projects</h5>
+                <h2>{{ project_count }}</h2>
+                <a href="{% url 'project_list' %}" class="btn btn-info btn-sm text-white">Manage Projects</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body py-2 d-flex flex-column justify-content-between">
+                <h5 class="card-title">Messages</h5>
+                <h2>Unread: {{ unread_message_count }}/{{ contact_message_count }}</h2>
+                <a href="{% url 'contact_messages' %}" class="btn btn-danger btn-sm">Manage Messages</a>
+            </div>
+        </div>
+    </div>
 </div>
-<br>
-<div class="text-center">
-    <a href="{% url 'user_logout' %}" class="btn btn-danger mt-3"
-        onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+{% else %}
+<div class="alert alert-warning">Profile not found.
+    <a href="{% url 'update_profile' %}">Create Profile</a>
 </div>
-<br>
+{% endif %}
 {% endblock %}

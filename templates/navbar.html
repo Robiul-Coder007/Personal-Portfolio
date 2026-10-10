@@ -1,7 +1,8 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold text-primary" href="{% url 'home' %}">Personal Portfolio</a>
+    <a class="navbar-brand fw-bold text-primary" href="#">
+      <i class="fas fa-user-tie me-1"></i> Personal Portfolio</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -9,53 +10,59 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'resume' %}">CV / Resume</a>
+          <a class="nav-link" href="{% url 'contact' %}">
+            <i class="fas fa-address-book me-1"></i> Contact <i class="fas fa-file-alt me-1"></i> CV / Resume</a>
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+          <a class="nav-link" href="{% url 'dashboard' %}">
+            <i class="fas fa-chart-line me-1"></i> Dashboard</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Manage Portfolio
+            <i class="fas fa-tasks me-1"></i> Manage Portfolio
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'skill_list' %}">Skills</a></li>
-            <li><a class="dropdown-item" href="{% url 'education_list' %}">Education</a></li>
-            <li><a class="dropdown-item" href="{% url 'experience_list' %}">Experience</a></li>
-            <li><a class="dropdown-item" href="{% url 'project_list' %}">Projects</a></li>
+            <li><a class="dropdown-item" href="{% url 'skill_list' %}">
+                <i class="fas fa-lightbulb me-1"></i> Skills</a></li>
+            <li><a class="dropdown-item" href="{% url 'education_list' %}">
+                <i class="fas fa-graduation-cap me-1"></i> Education</a></li>
+            <li><a class="dropdown-item" href="{% url 'experience_list' %}">
+                <i class="fas fa-briefcase me-1"></i> Experience</a></li>
+            <li><a class="dropdown-item" href="{% url 'project_list' %}">
+                <i class="fas fa-folder-open me-1"></i> Projects</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{% url 'contact_messages' %}">Contact Messages</a></li>
+            <li><a class="dropdown-item" href="{% url 'contact_messages' %}">
+                <i class="fas fa-envelope me-1"></i> Contact Messages</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle fw-semibold text-primary" href="#" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
-            Hi, {{ request.user.username }}
+            <i class="fas fa-user me-1"></i> Hi, {{ request.user.username }}
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'update_profile' %}">Update Profile</a></li>
-            <li><a class="dropdown-item" href="{% url 'change_pass' %}">Change Password</a></li>
+            <li><a class="dropdown-item" href="{% url 'update_profile' %}">
+                <i class="fas fa-user-edit me-1"></i> Update Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'change_pass' %}">
+                <i class="fas fa-key me-1"></i> Change Password</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item text-danger fw-semibold" href="{% url 'user_logout' %}">Logout</a></li>
+            <li><a class="dropdown-item text-danger fw-semibold" href="{% url 'user_logout' %}">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
           </ul>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link fw-semibold" href="{% url 'user_login' %}">Login</a>
+          <a class="nav-link fw-semibold" href="{% url 'user_login' %}">
+            <i class="fas fa-sign-in-alt me-1"></i> Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link btn btn-primary text-white btn-sm px-3 ms-2" href="{% url 'user_register' %}">Register</a>
+          <a class="nav-link btn btn-primary text-white btn-sm px-3 ms-2" href="{% url 'user_register' %}">
+            <i class="fas fa-user-plus me-1"></i> Register</a>
         </li>
         {% endif %}
       </ul>

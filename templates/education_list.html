@@ -1,45 +1,73 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="card p-4 shadow-sm">
-    <div class="d-flex justify-content-between">
-        <h2>Education</h2>
-
-        <a href="{% url 'education_create' %}" class="btn btn-primary mt-3">+ Add Education</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">Education</h2>
+        <p class="text-muted mb-0">Manage your educational qualifications.</p>
     </div>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success mt-3">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-    <hr>
-    {% if educations %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Degree</th>
-                <th>Institution</th>
-                <th>Year</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for education in educations %}
-            <tr>
-                <td>{{ education.degree }}</td>
-                <td>{{ education.institution }}</td>
-                <td>{{ education.start_year }} - {{ education.end_year|default:"Present" }}</td>
-                <td>
-                    <a href="{% url 'education_update' education.id %}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{% url 'education_delete' education.id %}" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Are you sure you want to delete this education record?')">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No education records found.</p>
-    {% endif %}
+    <p>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="{% url 'education_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Education
+        </a>
+    </p>
+</div>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if educations %}
+        {% for education in educations %}
+        <div class="border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5 class="fw-bold mb-1">{{ education.qualification }}</h5>
+                    <p class="mb-1">{{ education.institute }}</p>
+                    {% if education.group_or_subject %}
+                    <p class="text-muted mb-1">Subject: {{ education.group_or_subject }}</p>
+                    {% endif %}
+                    {% if education.result %}
+                    <p class="mb-1">Result: <strong>{{ education.result_or_cgpa }}</strong></p>
+                    {% endif %}
+                    {% if education.board %}
+                    <p class="mb-1">Board: {{ education.board }}</p>
+                    {% endif %}
+                    {% if education.passing_year %}
+                    <p class="mb-1">Passing Year: {{ education.passing_year }}</p>
+                    {% endif %}
+                    {% if education.description %}
+                    <p class="text-muted mt-2 mb-0">{{ education.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="text-end">
+                    <a href="{% url 'education_update' education.pk %}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'education_delete' education.pk %}" class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this education entry?')">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-graduation-cap fa-4x text-muted mb-3"></i>
+            <h5>No education records found.</h5>
+            <p class="text-muted">Add your education to your portfolio.</p>
+            <a href="{% url 'education_create' %}" class="btn btn-primary">Add Education</a>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

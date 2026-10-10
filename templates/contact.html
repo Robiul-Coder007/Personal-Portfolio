@@ -1,21 +1,69 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="card p-4 shadow-sm">
-    <h2>Contact Me</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Explore Portfolio Profiles</h2>
+            <p class="text-muted">Select a profile to view its Resume or send a message.</p>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% if not profiles %}
+        <div class="alert alert-warning">
+            No portfolio profiles are available yet.
+        </div>
+        {% else %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form method="POST" action="{% url 'contact' %}">
+                    {% csrf_token %}
 
-    <p>Send me a message using the form below.</p>
-    <hr>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success mt-3">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-    <form method="POST">
-        {% csrf_token %}
-
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary mt-3">Send Message</button>
-    </form>
+                    {{ form.as_p }}
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" id="view-resume-btn" class="btn btn-outline-primary">
+                            <i class="fas fa-file-alt me-1"></i>
+                            View Selected Resume
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane me-1"></i>
+                            Send Message to Selected Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const profileSelect = document.getElementById("id_profile");
+        const resumeButton = document.getElementById("view-resume-btn");
+        if (profileSelect && resumeButton) {
+            resumeButton.addEventListener("click", function () {
+                const profileId = profileSelect.value;
+
+                if (!profileId) {
+                    alert("Please select a portfolio profile first.");
+                    return;
+                }
+
+                const resumeUrlTemplate = "{% url 'resume' 0 %}";
+                const resumeUrl = resumeUrlTemplate.replace(
+                    "/0/",
+                    "/" + profileId + "/"
+                );
+
+                window.location.href = resumeUrl;
+            });
+        }
+    });
+</script>
 {% endblock %}
